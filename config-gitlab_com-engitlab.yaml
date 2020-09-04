@@ -1,0 +1,51 @@
+#
+# Gitlab configuration
+#
+# It is possible to use globbing in project names
+# aka
+#  - group/*
+#  - user/*/documentation
+gitlab:
+  access:
+    gitlab_url: "https://gitlab.com"
+    token: "MY_PERSONAL_SECRET_TOKEN"
+  projects:
+    - engitlab/*
+  # Membership attribute used when searching for projects
+  # If you want to export all projects from private gitlab instance
+  # sse False here. In big shared instances or gitlab.com use True
+  membership: True
+  # Wait Between Exports
+  # How many seconds to wait between projects to export.
+  # This is due rate-limiting in gitlab.com
+  # https://docs.gitlab.com/ee/user/project/settings/import_export.html#rate-limits
+  #
+  # If you break the limit API respond with 429 for your IP address for a while.
+  #
+  # When you are using this in your private gitlab instance you can set it to 0
+  wait_between_exports: 303
+
+#
+# Backup configuration
+#
+backup:
+  # Create separate directory for every project
+  project_dirs: True
+
+  # Destination of the exports/backups
+  destination: "/vagrant/backup"
+
+  # Backup Name template
+  # Is it possible to use some placeholders in the name
+  #   {PROJECT_NAME} - Name of the project with full path
+  #   Path slashes is replaces with dashes.
+  #   Example:
+  #     rvojcik/project1 => rvojcik-project1
+  #
+  #   {TIME} - Time of the export
+  backup_name: "gitlab-com-{PROJECT_NAME}-{TIME}.tar.gz"
+
+  # Time format tamplate
+  # Time is construct by python strftime.
+  # backup_time_format can be anything compatible with strftime
+  backup_time_format: "%Y%m%d"
